@@ -206,8 +206,10 @@ export default function DashboardPage() {
                   </p>
                 </HealthcareCardBody>
                 <HealthcareCardFooter>
-                  <Button type="button" size="sm" variant="outline">
-                    Add log
+                  <Button type="button" size="sm" variant="outline" asChild>
+                    <Link href={`/care-logs/new?patientId=${patient.id}`}>
+                      Add log
+                    </Link>
                   </Button>
                   <Button type="button" size="sm" variant="ghost" asChild>
                     <Link href={`/patients/${patient.id}`}>View patient</Link>
@@ -224,8 +226,8 @@ export default function DashboardPage() {
             title="Recent activity"
             description="All caregiver actions logged this shift."
             action={
-              <Button type="button" size="sm" variant="outline">
-                View all logs
+              <Button type="button" size="sm" variant="outline" asChild>
+                <Link href="/care-logs">View all logs</Link>
               </Button>
             }
           />

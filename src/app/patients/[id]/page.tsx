@@ -117,8 +117,10 @@ export default async function PatientDetailPage({
                   All patients
                 </Link>
               </Button>
-              <Button type="button" size="sm">
-                Add log
+              <Button type="button" size="sm" asChild>
+                <Link href={`/care-logs/new?patientId=${patient.id}`}>
+                  Add log
+                </Link>
               </Button>
             </>
           }

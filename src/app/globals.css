@@ -155,3 +155,242 @@
     font-family: var(--font-sans), system-ui, sans-serif;
   }
 }
+
+/* ════════════════════════════════════════════════════════════
+   ACCESSIBILITY ENGINE
+   All settings applied via data attributes on <html>.
+   Preferences set in context/accessibility-context.tsx and
+   persisted in localStorage.
+   ════════════════════════════════════════════════════════════ */
+
+/* ── Smooth theme transitions (suppressed by motion settings) ──────────────── */
+html:not([data-motion="none"]) body {
+  transition:
+    background-color 220ms ease,
+    color 220ms ease,
+    border-color 220ms ease;
+}
+
+/* ── 1. Font Size ──────────────────────────────────────────────────────────── */
+/*
+ * Scales html font-size so all rem-based values (text, spacing) resize together.
+ * This intentionally scales padding/gap too — larger text needs more space.
+ */
+html { font-size: calc(16px * var(--a11y-font-scale, 1)); }
+
+html[data-font-size="small"]   { --a11y-font-scale: 0.9; }
+html[data-font-size="default"] { --a11y-font-scale: 1; }
+html[data-font-size="large"]   { --a11y-font-scale: 1.125; }
+html[data-font-size="x-large"] { --a11y-font-scale: 1.225; }
+html[data-font-size="maximum"] { --a11y-font-scale: 1.375; }
+
+/* ── 2. Font Style ─────────────────────────────────────────────────────────── */
+/*
+ * Overrides --font-sans which body uses via font-family: var(--font-sans).
+ * Dyslexia mode also adds letter/word spacing and relaxed line-height.
+ */
+html[data-font-style="readable-sans"] {
+  --font-sans: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+}
+html[data-font-style="dyslexia-friendly"] {
+  /* Wider, irregular letterforms help some dyslexic readers — no CDN required */
+  --font-sans: 'Trebuchet MS', 'Calibri', 'Century Gothic', Arial, sans-serif;
+  letter-spacing: 0.07em;
+  word-spacing: 0.16em;
+  line-height: 1.85;
+}
+html[data-font-style="mono"] {
+  --font-sans: ui-monospace, 'Cascadia Code', 'Source Code Pro', 'Courier New', monospace;
+}
+
+/* ── 3. Background Comfort Themes ─────────────────────────────────────────── */
+/*
+ * Overrides only background, card, and muted tokens — foreground inherits the
+ * appropriate dark or light values. Low Light is a full dark-mode substitute.
+ */
+html[data-background="soft-blue"] {
+  --background: oklch(0.965 0.014 237);
+  --card:       oklch(0.978 0.009 237);
+  --muted:      oklch(0.945 0.018 237);
+  --popover:    oklch(0.978 0.009 237);
+  --sidebar:    oklch(0.955 0.016 237);
+}
+
+html[data-background="warm-cream"] {
+  --background: oklch(0.968 0.018 88);
+  --card:       oklch(0.978 0.012 88);
+  --muted:      oklch(0.950 0.022 88);
+  --popover:    oklch(0.978 0.012 88);
+  --sidebar:    oklch(0.958 0.020 88);
+}
+
+html[data-background="calm-green"] {
+  --background: oklch(0.965 0.014 155);
+  --card:       oklch(0.977 0.010 155);
+  --muted:      oklch(0.945 0.018 155);
+  --popover:    oklch(0.977 0.010 155);
+  --sidebar:    oklch(0.955 0.016 155);
+}
+
+html[data-background="low-light"] {
+  --background:       oklch(0.17 0 0);
+  --foreground:       oklch(0.88 0 0);
+  --card:             oklch(0.22 0 0);
+  --card-foreground:  oklch(0.88 0 0);
+  --popover:          oklch(0.22 0 0);
+  --popover-foreground: oklch(0.88 0 0);
+  --muted:            oklch(0.28 0 0);
+  --muted-foreground: oklch(0.64 0 0);
+  --border:           oklch(0.34 0 0);
+  --input:            oklch(0.34 0 0);
+  --sidebar:          oklch(0.22 0 0);
+  --sidebar-foreground: oklch(0.88 0 0);
+  --sidebar-border:   oklch(0.34 0 0);
+  --primary:          oklch(0.68 0.17 250);
+  --primary-foreground: oklch(0.14 0 0);
+}
+
+/* ── 4. Text Colour Comfort ────────────────────────────────────────────────── */
+html[data-text="deep-black"] {
+  --foreground:      oklch(0.04 0 0);
+  --card-foreground: oklch(0.04 0 0);
+  --popover-foreground: oklch(0.04 0 0);
+  --sidebar-foreground: oklch(0.04 0 0);
+}
+
+html[data-text="soft-navy"] {
+  --foreground:      oklch(0.24 0.065 252);
+  --card-foreground: oklch(0.24 0.065 252);
+  --popover-foreground: oklch(0.24 0.065 252);
+  --sidebar-foreground: oklch(0.24 0.065 252);
+}
+
+html[data-text="warm-brown"] {
+  --foreground:      oklch(0.27 0.042 55);
+  --card-foreground: oklch(0.27 0.042 55);
+  --popover-foreground: oklch(0.27 0.042 55);
+  --sidebar-foreground: oklch(0.27 0.042 55);
+}
+
+html[data-text="bright-white"] {
+  --foreground:      oklch(0.985 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+}
+
+/* ── 5. High Contrast — applied LAST to override background/text settings ─── */
+html[data-contrast="dark"] {
+  --background:         oklch(0.05 0 0);
+  --foreground:         oklch(0.99 0 0);
+  --card:               oklch(0.09 0 0);
+  --card-foreground:    oklch(0.99 0 0);
+  --popover:            oklch(0.09 0 0);
+  --popover-foreground: oklch(0.99 0 0);
+  --muted:              oklch(0.14 0 0);
+  --muted-foreground:   oklch(0.75 0 0);
+  --border:             oklch(0.55 0 0);
+  --input:              oklch(0.55 0 0);
+  --primary:            oklch(0.72 0.18 250);
+  --primary-foreground: oklch(0.05 0 0);
+  --sidebar:            oklch(0.09 0 0);
+  --sidebar-foreground: oklch(0.99 0 0);
+  --sidebar-border:     oklch(0.55 0 0);
+  --ring:               oklch(0.72 0.18 250);
+}
+
+html[data-contrast="light"] {
+  --background:         oklch(1 0 0);
+  --foreground:         oklch(0.02 0 0);
+  --card:               oklch(0.99 0 0);
+  --card-foreground:    oklch(0.02 0 0);
+  --popover:            oklch(0.99 0 0);
+  --popover-foreground: oklch(0.02 0 0);
+  --muted:              oklch(0.94 0 0);
+  --muted-foreground:   oklch(0.18 0 0);
+  --border:             oklch(0.12 0 0);
+  --input:              oklch(0.12 0 0);
+  --primary:            oklch(0.36 0.18 250);
+  --primary-foreground: oklch(1 0 0);
+  --sidebar:            oklch(0.96 0 0);
+  --sidebar-foreground: oklch(0.02 0 0);
+  --sidebar-border:     oklch(0.12 0 0);
+  --ring:               oklch(0.36 0.18 250);
+}
+
+html[data-contrast="yellow"] {
+  /* Yellow-on-black: standard for some visual impairments & bright sunlight */
+  --background:         oklch(0.89 0.21 95);
+  --foreground:         oklch(0.03 0 0);
+  --card:               oklch(0.92 0.19 95);
+  --card-foreground:    oklch(0.03 0 0);
+  --popover:            oklch(0.92 0.19 95);
+  --popover-foreground: oklch(0.03 0 0);
+  --muted:              oklch(0.85 0.23 95);
+  --muted-foreground:   oklch(0.08 0 0);
+  --border:             oklch(0.03 0 0);
+  --input:              oklch(0.03 0 0);
+  --primary:            oklch(0.03 0 0);
+  --primary-foreground: oklch(0.89 0.21 95);
+  --sidebar:            oklch(0.86 0.22 95);
+  --sidebar-foreground: oklch(0.03 0 0);
+  --sidebar-border:     oklch(0.03 0 0);
+  --ring:               oklch(0.03 0 0);
+  --success:            oklch(0.25 0.10 145);
+  --destructive:        oklch(0.35 0.20 25);
+}
+
+/* ── 6. Motion Control ─────────────────────────────────────────────────────── */
+html[data-motion="reduced"] *,
+html[data-motion="reduced"] *::before,
+html[data-motion="reduced"] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+html[data-motion="none"] *,
+html[data-motion="none"] *::before,
+html[data-motion="none"] *::after {
+  animation: none !important;
+  transition: none !important;
+  scroll-behavior: auto !important;
+}
+
+/* ── 7. Focus Enhancement ──────────────────────────────────────────────────── */
+html[data-focus="strong"] *:focus-visible {
+  outline: 3px solid var(--ring) !important;
+  outline-offset: 3px !important;
+}
+
+html[data-focus="extra-strong"] *:focus-visible {
+  outline: 4px solid oklch(0.78 0.19 88) !important; /* amber */
+  outline-offset: 4px !important;
+  box-shadow: 0 0 0 7px oklch(0.78 0.19 88 / 30%) !important;
+}
+
+/* ── 8. Spacing Density ────────────────────────────────────────────────────── */
+/*
+ * Targets vertical flex stacks (Stack component) and fieldset cards
+ * (FormSection). Uses attribute+class specificity to override Tailwind
+ * without !important.
+ */
+
+/* Compact: tighter section gaps */
+html[data-spacing="compact"] .flex-col.gap-8 { gap: 1.25rem; }
+html[data-spacing="compact"] .flex-col.gap-6 { gap: 0.875rem; }
+html[data-spacing="compact"] .flex-col.gap-4 { gap: 0.5rem; }
+
+/* Compact: tighter card padding */
+html[data-spacing="compact"] fieldset.rounded-lg { padding: 0.75rem; }
+html[data-spacing="compact"] fieldset.rounded-lg > div { gap: 0.75rem; }
+
+/* Spacious: airier section gaps */
+html[data-spacing="spacious"] .flex-col.gap-8 { gap: 4rem; }
+html[data-spacing="spacious"] .flex-col.gap-6 { gap: 2.5rem; }
+html[data-spacing="spacious"] .flex-col.gap-4 { gap: 1.5rem; }
+
+/* Spacious: airier card padding */
+html[data-spacing="spacious"] fieldset.rounded-lg { padding: 1.75rem; }
+html[data-spacing="spacious"] fieldset.rounded-lg > div { gap: 1.25rem; }
