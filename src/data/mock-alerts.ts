@@ -5,6 +5,7 @@ export type AlertSeverity = Extract<AlertTone, "critical" | "warning" | "info">;
 export type CareAlert = {
   id: string;
   severity: AlertSeverity;
+  patientId: string;
   patientName: string;
   title: string;
   description: string;
@@ -15,6 +16,7 @@ export const MOCK_ALERTS: CareAlert[] = [
   {
     id: "a1",
     severity: "critical",
+    patientId: "p3",
     patientName: "Maria Santos",
     title: "Pain level 8/10 — Maria Santos",
     description:
@@ -24,6 +26,7 @@ export const MOCK_ALERTS: CareAlert[] = [
   {
     id: "a2",
     severity: "critical",
+    patientId: "p2",
     patientName: "John Okafor",
     title: "Elevated blood pressure — John Okafor",
     description:
@@ -33,6 +36,7 @@ export const MOCK_ALERTS: CareAlert[] = [
   {
     id: "a3",
     severity: "warning",
+    patientId: "p6",
     patientName: "Tunde Adeyemi",
     title: "Ankle oedema observed — Tunde Adeyemi",
     description:
@@ -42,6 +46,7 @@ export const MOCK_ALERTS: CareAlert[] = [
   {
     id: "a4",
     severity: "info",
+    patientId: "p5",
     patientName: "Grace Afolabi",
     title: "Upcoming visit — Grace Afolabi",
     description:

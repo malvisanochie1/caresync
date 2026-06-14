@@ -1,3 +1,4 @@
+import Link from "next/link";
 import {
   Activity,
   AlertTriangle,
@@ -163,8 +164,10 @@ export default function DashboardPage() {
                 description={alert.description}
                 action={
                   alert.severity !== "info" ? (
-                    <Button type="button" size="sm">
-                      View patient
+                    <Button type="button" size="sm" asChild>
+                      <Link href={`/patients/${alert.patientId}`}>
+                        View patient
+                      </Link>
                     </Button>
                   ) : undefined
                 }
@@ -206,8 +209,8 @@ export default function DashboardPage() {
                   <Button type="button" size="sm" variant="outline">
                     Add log
                   </Button>
-                  <Button type="button" size="sm" variant="ghost">
-                    View patient
+                  <Button type="button" size="sm" variant="ghost" asChild>
+                    <Link href={`/patients/${patient.id}`}>View patient</Link>
                   </Button>
                 </HealthcareCardFooter>
               </HealthcareCard>

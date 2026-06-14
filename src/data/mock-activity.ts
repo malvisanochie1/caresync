@@ -10,6 +10,7 @@ export type ActivityItem = {
   id: string;
   type: ActivityType;
   caregiver: string;
+  patientId: string;
   patientName: string;
   description: string;
   time: string;
@@ -20,6 +21,7 @@ export const MOCK_ACTIVITY: ActivityItem[] = [
     id: "act1",
     type: "escalation",
     caregiver: "Chioma Eze",
+    patientId: "p3",
     patientName: "Maria Santos",
     description: "Escalation raised — pain level 8/10. Supervisor notified.",
     time: "9:42 AM",
@@ -28,6 +30,7 @@ export const MOCK_ACTIVITY: ActivityItem[] = [
     id: "act2",
     type: "vitals",
     caregiver: "Bisi Adeyemi",
+    patientId: "p2",
     patientName: "John Okafor",
     description: "Vitals logged: BP 158/96 mmHg, pulse 88 bpm.",
     time: "11:02 AM",
@@ -36,6 +39,7 @@ export const MOCK_ACTIVITY: ActivityItem[] = [
     id: "act3",
     type: "visit_complete",
     caregiver: "Ngozi Obi",
+    patientId: "p1",
     patientName: "Adaeze Nwosu",
     description: "Morning visit completed. Mobility check passed.",
     time: "9:30 AM",
@@ -44,6 +48,7 @@ export const MOCK_ACTIVITY: ActivityItem[] = [
     id: "act4",
     type: "log",
     caregiver: "Bisi Adeyemi",
+    patientId: "p4",
     patientName: "Emeka Eze",
     description: "Oxygen saturation logged: SpO₂ 97%. No intervention needed.",
     time: "10:00 AM",
@@ -52,6 +57,7 @@ export const MOCK_ACTIVITY: ActivityItem[] = [
     id: "act5",
     type: "note",
     caregiver: "Chioma Eze",
+    patientId: "p6",
     patientName: "Tunde Adeyemi",
     description: "Fluid restriction note added. Family informed of dietary guidelines.",
     time: "11:52 AM",
@@ -60,6 +66,7 @@ export const MOCK_ACTIVITY: ActivityItem[] = [
     id: "act6",
     type: "visit_start",
     caregiver: "Ngozi Obi",
+    patientId: "p3",
     patientName: "Maria Santos",
     description: "Home visit started. Patient anxious — requested pain relief.",
     time: "9:15 AM",
