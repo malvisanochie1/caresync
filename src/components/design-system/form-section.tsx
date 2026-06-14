@@ -23,7 +23,7 @@ export function FormSection({
     return (
       <fieldset
         className={cn(
-          "flex flex-col gap-4 rounded-lg border border-border bg-card p-4 sm:p-6",
+          "flex flex-col gap-4 rounded-lg border border-border bg-card p-4 sm:p-6 a11y-card-pad",
           className,
         )}
       >
@@ -47,7 +47,7 @@ export function FormSection({
   return (
     <section
       className={cn(
-        "flex flex-col gap-4 rounded-lg border border-border bg-card p-4 sm:p-6",
+        "flex flex-col gap-4 rounded-lg border border-border bg-card p-4 sm:p-6 a11y-card-pad",
         className,
       )}
     >

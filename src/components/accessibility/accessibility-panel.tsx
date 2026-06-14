@@ -5,10 +5,12 @@ import {
   BookOpen,
   Crosshair,
   Eye,
+  Layers,
   Palette,
   RotateCcw,
   Settings2,
   Sun,
+  TriangleAlert,
   Type,
   Zap,
   type LucideIcon,
@@ -25,7 +27,9 @@ import {
 } from "@/components/ui/sheet";
 import {
   useAccessibility,
+  DEFAULT_SETTINGS,
   type AccessibilitySettings,
+  type BackgroundTheme,
 } from "@/context/accessibility-context";
 
 // ─── Option button ────────────────────────────────────────────────────────────
@@ -44,7 +48,7 @@ function OptionButton({ label, active, onClick, className }: OptionButtonProps) 
       aria-pressed={active}
       onClick={onClick}
       className={cn(
-        "rounded-full border px-3 py-1.5 text-xs font-medium leading-none transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1",
+        "rounded-full border px-3 py-2.5 text-xs font-medium leading-none transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1",
         active
           ? "border-primary bg-primary text-primary-foreground"
           : "border-border bg-card text-muted-foreground hover:border-primary/50 hover:text-foreground",
@@ -92,13 +96,75 @@ function PanelSection({
 function GroupLabel({ label }: { label: string }) {
   return (
     <div className="flex items-center gap-3">
-      <span className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+      <h2 className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
         {label}
-      </span>
+      </h2>
       <div className="h-px flex-1 bg-border" />
     </div>
   );
 }
+
+// ─── Presets ──────────────────────────────────────────────────────────────────
+
+const PRESETS: Array<{
+  label: string;
+  description: string;
+  settings: Partial<AccessibilitySettings>;
+}> = [
+  {
+    label: "Low Vision",
+    description: "Large text, dark contrast, strong focus",
+    settings: { fontSize: "x-large", contrast: "dark", focus: "extra-strong", spacing: "spacious" },
+  },
+  {
+    label: "Dyslexia",
+    description: "Wider spacing, warm cream background",
+    settings: { fontStyle: "dyslexia-friendly", fontSize: "large", spacing: "spacious", background: "warm-cream" },
+  },
+  {
+    label: "Night Shift",
+    description: "Dark background, reduced motion",
+    settings: { background: "low-light", motion: "reduced" },
+  },
+  {
+    label: "Senior",
+    description: "Large readable text, spacious layout",
+    settings: { fontSize: "x-large", fontStyle: "readable-sans", focus: "strong", spacing: "spacious" },
+  },
+];
+
+interface PresetButtonProps {
+  label: string;
+  description: string;
+  active: boolean;
+  onClick: () => void;
+}
+
+function PresetButton({ label, description, active, onClick }: PresetButtonProps) {
+  return (
+    <button
+      type="button"
+      aria-pressed={active}
+      onClick={onClick}
+      className={cn(
+        "flex flex-col rounded-lg border px-3 py-2.5 text-left",
+        "transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1",
+        active
+          ? "border-primary bg-primary/10"
+          : "border-border bg-card hover:border-primary/50 hover:bg-accent/30",
+      )}
+    >
+      <span className={cn("text-xs font-semibold", active ? "text-primary" : "text-foreground")}>
+        {label}
+      </span>
+      <span className="mt-0.5 text-[10px] leading-snug text-muted-foreground">{description}</span>
+    </button>
+  );
+}
+
+// ─── Light backgrounds where Bright White text is unsafe ──────────────────────
+
+const LIGHT_BACKGROUNDS: BackgroundTheme[] = ["default", "soft-blue", "warm-cream", "calm-green"];
 
 // ─── Preview card ─────────────────────────────────────────────────────────────
 
@@ -106,6 +172,7 @@ function PreviewCard() {
   return (
     <div
       aria-label="Live accessibility preview"
+      aria-live="polite"
       className="rounded-lg border border-border bg-card p-4 shadow-sm"
     >
       <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
@@ -135,8 +202,32 @@ function PreviewCard() {
 
 // ─── Main panel ───────────────────────────────────────────────────────────────
 
+function isPresetActive(
+  presetSettings: Partial<AccessibilitySettings>,
+  current: AccessibilitySettings,
+): boolean {
+  const target = { ...DEFAULT_SETTINGS, ...presetSettings };
+  return (Object.keys(target) as (keyof AccessibilitySettings)[]).every(
+    (key) => current[key] === target[key],
+  );
+}
+
 export function AccessibilityPanel() {
-  const { settings, updateSetting, resetSettings } = useAccessibility();
+  const { settings, updateSetting, resetSettings, applyPreset } = useAccessibility();
+
+  const activePresetLabel =
+    PRESETS.find((p) => isPresetActive(p.settings, settings))?.label ?? null;
+
+  const isCustom =
+    activePresetLabel === null &&
+    (Object.keys(DEFAULT_SETTINGS) as (keyof AccessibilitySettings)[]).some(
+      (key) => settings[key] !== DEFAULT_SETTINGS[key],
+    );
+
+  const brightWhiteUnsafe =
+    settings.textColor === "bright-white" &&
+    LIGHT_BACKGROUNDS.includes(settings.background) &&
+    settings.contrast === "off";
 
   function opt<K extends keyof AccessibilitySettings>(
     key: K,
@@ -156,7 +247,13 @@ export function AccessibilityPanel() {
   return (
     <Sheet>
       {/* ── Floating trigger button ──────────────────────────────────────── */}
-      <div className="fixed bottom-6 right-6 z-40">
+      <div
+        className="fixed z-40"
+        style={{
+          bottom: "calc(1.5rem + env(safe-area-inset-bottom, 0px))",
+          right: "calc(1.5rem + env(safe-area-inset-right, 0px))",
+        }}
+      >
         <SheetTrigger asChild>
           <button
             type="button"
@@ -209,6 +306,35 @@ export function AccessibilityPanel() {
 
             {/* Preview */}
             <PreviewCard />
+
+            {/* ── Quick presets ───────────────────────────────────────────── */}
+            <div className="flex flex-col gap-3">
+              <div>
+                <div className="flex items-center gap-2">
+                  <Layers className="size-4 shrink-0 text-muted-foreground" aria-hidden="true" />
+                  <h3 className="text-sm font-semibold text-foreground">Quick presets</h3>
+                </div>
+                <p className="mt-0.5 pl-6 text-xs leading-relaxed text-muted-foreground">
+                  Apply a curated set of settings in one tap. Resets to defaults first.
+                </p>
+              </div>
+              <div className="grid grid-cols-2 gap-2 pl-6">
+                {PRESETS.map((preset) => (
+                  <PresetButton
+                    key={preset.label}
+                    label={preset.label}
+                    description={preset.description}
+                    active={preset.label === activePresetLabel}
+                    onClick={() => applyPreset(preset.settings)}
+                  />
+                ))}
+              </div>
+              {isCustom && (
+                <p className="pl-6 text-[10px] font-medium text-muted-foreground">
+                  Custom settings active
+                </p>
+              )}
+            </div>
 
             {/* ── Text group ─────────────────────────────────────────────── */}
             <GroupLabel label="Text" />
@@ -273,6 +399,19 @@ export function AccessibilityPanel() {
               {opt("textColor", "warm-brown", "Warm Brown")}
               {opt("textColor", "bright-white", "Bright White")}
             </PanelSection>
+
+            {brightWhiteUnsafe && (
+              <div
+                role="alert"
+                className="ml-6 flex items-start gap-2 rounded-md border border-warning/40 bg-warning/10 px-3 py-2.5 text-xs text-warning-foreground"
+              >
+                <TriangleAlert className="mt-0.5 size-3.5 shrink-0" aria-hidden="true" />
+                <span>
+                  Bright White on a light background is nearly invisible. Switch to{" "}
+                  <strong className="font-semibold">Low Light</strong> background or a high-contrast mode.
+                </span>
+              </div>
+            )}
 
             {/* ── Comfort group ───────────────────────────────────────────── */}
             <GroupLabel label="Comfort" />

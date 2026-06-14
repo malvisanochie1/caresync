@@ -50,7 +50,7 @@ export function StatCard({
   return (
     <div
       className={cn(
-        "flex min-h-[7.5rem] flex-col justify-between gap-3 rounded-lg border border-border bg-card p-4 shadow-sm sm:p-5",
+        "flex min-h-[7.5rem] flex-col justify-between gap-3 rounded-lg border border-border bg-card p-4 shadow-sm sm:p-5 a11y-card-pad",
         className,
       )}
     >

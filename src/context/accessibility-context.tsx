@@ -58,6 +58,7 @@ interface AccessibilityContextValue {
     value: AccessibilitySettings[K],
   ) => void;
   resetSettings: () => void;
+  applyPreset: (partial: Partial<AccessibilitySettings>) => void;
 }
 
 const AccessibilityContext = createContext<AccessibilityContextValue | null>(null);
@@ -79,7 +80,9 @@ export function AccessibilityProvider({
     } catch {
       // ignore parse errors
     }
-    return DEFAULT_SETTINGS;
+    // No stored preference — honour system motion preference as initial default
+    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    return { ...DEFAULT_SETTINGS, motion: prefersReduced ? "reduced" : DEFAULT_SETTINGS.motion };
   });
 
   // Apply data attributes to <html> whenever settings change
@@ -115,9 +118,13 @@ export function AccessibilityProvider({
     setSettings(DEFAULT_SETTINGS);
   }
 
+  function applyPreset(partial: Partial<AccessibilitySettings>) {
+    setSettings({ ...DEFAULT_SETTINGS, ...partial });
+  }
+
   return (
     <AccessibilityContext.Provider
-      value={{ settings, updateSetting, resetSettings }}
+      value={{ settings, updateSetting, resetSettings, applyPreset }}
     >
       {children}
     </AccessibilityContext.Provider>

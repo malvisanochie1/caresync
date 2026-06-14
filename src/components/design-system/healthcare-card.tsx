@@ -66,10 +66,7 @@ export function HealthcareCardHeader({
 }: HealthcareCardHeaderProps) {
   return (
     <div
-      className={cn(
-        "flex items-start gap-3 border-b border-border p-4 sm:p-5",
-        className,
-      )}
+      className={cn("flex items-start gap-3 border-b border-border p-4 sm:p-5 a11y-card-pad", className)}
       {...rest}
     >
       {icon && (
@@ -99,7 +96,7 @@ export function HealthcareCardBody({
 }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={cn("p-4 text-sm sm:p-5", className)}
+      className={cn("p-4 text-sm sm:p-5 a11y-card-pad", className)}
       {...rest}
     />
   );
@@ -112,7 +109,7 @@ export function HealthcareCardFooter({
   return (
     <div
       className={cn(
-        "flex flex-wrap items-center gap-2 border-t border-border bg-muted/30 p-4 sm:p-5",
+        "flex flex-wrap items-center gap-2 border-t border-border bg-muted/30 p-4 sm:p-5 a11y-card-pad",
         className,
       )}
       {...rest}

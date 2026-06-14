@@ -29,7 +29,7 @@ export function InfoCard({
   return (
     <div
       className={cn(
-        "flex gap-3 rounded-lg border border-border bg-card p-4 sm:p-5",
+        "flex gap-3 rounded-lg border border-border bg-card p-4 sm:p-5 a11y-card-pad",
         horizontal ? "flex-row items-start" : "flex-col",
         className,
       )}
