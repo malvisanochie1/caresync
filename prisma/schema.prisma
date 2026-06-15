@@ -1,5 +1,5 @@
 // Prisma schema for CareSync.
-// Models will be introduced in a later stage.
+// Stage 7: data layer foundation — models, enums, relationships.
 
 generator client {
   provider = "prisma-client-js"
@@ -8,4 +8,96 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+// ── Enums ─────────────────────────────────────────────────────────────────────
+
+enum UserRole {
+  PSW
+  NURSE
+  SUPERVISOR
+}
+
+enum CareStatus {
+  STABLE
+  ATTENTION
+  CRITICAL
+  COMPLETED
+  PENDING
+  MISSED
+}
+
+enum MobilityLevel {
+  INDEPENDENT
+  ASSISTED
+  DEPENDENT
+}
+
+enum CareLogStatus {
+  DRAFT
+  SUBMITTED
+  PENDING_REVIEW
+  FLAGGED
+}
+
+// ── Models ────────────────────────────────────────────────────────────────────
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  role      UserRole @default(PSW)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  assignedPatients Patient[] @relation("AssignedCaregiver")
+  careLogs         CareLog[]
+}
+
+model Patient {
+  id                    String        @id @default(cuid())
+  name                  String
+  age                   Int
+  location              String
+  address               String
+  visitTime             String
+  status                CareStatus    @default(PENDING)
+  condition             String
+  note                  String        @default("")
+  lastCheck             String
+  nextVisit             String
+  emergencyContactName  String
+  emergencyContactPhone String
+  medicalSummary        String
+  allergies             String[]
+  mobilityLevel         MobilityLevel @default(INDEPENDENT)
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+
+  assignedCaregiverId String
+  assignedCaregiver   User      @relation("AssignedCaregiver", fields: [assignedCaregiverId], references: [id])
+
+  careLogs CareLog[]
+}
+
+model CareLog {
+  id              String        @id @default(cuid())
+  visitTime       String
+  medicationGiven Boolean       @default(false)
+  medicationTime  String?
+  bloodPressure   String        @default("")
+  bloodSugar      String        @default("")
+  temperature     String        @default("")
+  mobilityNotes   String        @default("")
+  dietaryNotes    String        @default("")
+  careNotes       String
+  status          CareLogStatus @default(DRAFT)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  patientId   String
+  patient     Patient @relation(fields: [patientId], references: [id])
+
+  caregiverId String
+  caregiver   User    @relation(fields: [caregiverId], references: [id])
 }
