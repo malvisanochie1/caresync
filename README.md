@@ -21,19 +21,19 @@
 
 ### Dashboard
 
-![Dashboard]()
+![Dashboard](public/dashboard.png)
 
 ---
 
 ### Accessibility Panel
 
-![Accessibility Panel](./public/readme/accessibility.png)
+![Accessibility Panel](public/Accessibility.jpg)
 
 ---
 
 ### Patient View
 
-![Patient View](./public/readme/patient-view.png)
+![Patient View](public/patient.png)
 
 ---
 
@@ -216,12 +216,9 @@ Accessibility is not simply about compliance, it is about ensuring that technolo
 
 CareSync follows a modular, feature-based architecture that separates business logic, reusable UI components, API interactions, and utilities. This structure keeps the codebase scalable, maintainable, and easy to extend as new healthcare features are introduced.
 
-```mermaid
-flowchart TD
+mermaid
 
-<img width="4945" height="1904" alt="caresync_flowchart" src="https://github.com/user-attachments/assets/e0634f4e-619f-4777-bbd6-2b1bec5f615f" />
-
-```
+![flowchart TD](public/caresync_flowchart.png)
 
 ### Project Structure
 
@@ -463,7 +460,7 @@ I enjoy building products that combine thoughtful user experiences with clean ar
 
 * Portfolio:https://malvis-portfolio.vercel.app/
 * GitHub: **https://github.com/malvisanochie1**
-* LinkedIn: **(Add LinkedIn URL)**
+* LinkedIn: **(https://www.linkedin.com/in/malvis-nwakonobi-67b644277/)**
 
 ---
 
