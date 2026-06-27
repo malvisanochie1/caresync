@@ -17,8 +17,6 @@
 
 ## Application Preview
 
-> **Replace the placeholders below with screenshots from your application.**
-
 ### Dashboard
 
 ![Dashboard](public/dashboard.png)
